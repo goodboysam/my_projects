@@ -1,0 +1,143 @@
+import numpy as np
+from pgmpy.models import MarkovNetwork
+from pgmpy.factors.discrete import DiscreteFactor
+
+# Adventure Quest Game
+class AdventureQuestGame:
+    def __init__(self):
+        # Initializing Markov network for decision making
+        self.model = MarkovNetwork()
+        self.create_storyline()
+        
+    def create_storyline(self):
+        # Defining game storyline variables and factors
+        decisions = [
+            "start", "meet_npc", "fight_enemy", "find_treasure", 
+            "explore_cave", "help_traveler", "cross_river", 
+            "climb_mountain", "magical_merchant", "decipher_runes", 
+            "rescue_captive", "set_up_camp", "confront_rival"
+        ]
+        
+        # Adding nodes for each decision point
+        for decision in decisions:
+            self.model.add_node(decision)
+        
+        # Defining factors with probabilities for successful progression
+        self.factors = {
+            "start": DiscreteFactor(["start"], [2], [0.9, 0.1]),  # Higher chance to start adventure
+            "meet_npc": DiscreteFactor(["meet_npc"], [2], [0.8, 0.2]),
+            "fight_enemy": DiscreteFactor(["fight_enemy"], [2], [0.7, 0.3]),
+            "find_treasure": DiscreteFactor(["find_treasure"], [2], [0.8, 0.2]),
+            "explore_cave": DiscreteFactor(["explore_cave"], [2], [0.6, 0.4]),
+            "help_traveler": DiscreteFactor(["help_traveler"], [2], [0.7, 0.3]),
+            "cross_river": DiscreteFactor(["cross_river"], [2], [0.7, 0.3]),
+            "climb_mountain": DiscreteFactor(["climb_mountain"], [2], [0.6, 0.4]),
+            "magical_merchant": DiscreteFactor(["magical_merchant"], [2], [0.7, 0.3]),
+            "decipher_runes": DiscreteFactor(["decipher_runes"], [2], [0.5, 0.5]),
+            "rescue_captive": DiscreteFactor(["rescue_captive"], [2], [0.6, 0.4]),
+            "set_up_camp": DiscreteFactor(["set_up_camp"], [2], [0.8, 0.2]),  # Chance for setting up camp
+            "confront_rival": DiscreteFactor(["confront_rival"], [2], [0.6, 0.4])  # Chance for confronting rival
+        }
+
+    def sample_decision(self, decision_node):
+        # Sample an outcome based on the probabilities in the factor
+        factor = self.factors[decision_node]
+        outcome_probabilities = factor.values
+        outcome = np.random.choice([1, 0], p=outcome_probabilities)  # 1 = Success, 0 = Fail
+        return outcome == 1
+
+    def play(self):
+        # Start the game and navigate through each decision point
+        print("Welcome to Adventure Quest!")
+        
+        # Initial Decision: Start the quest
+        if self.sample_decision("start"):
+            print("You begin your adventure!")
+        else:
+            print("You decide to stay home. Game Over.")
+            return
+        
+        # Decision 1: Meet NPC
+        if self.sample_decision("meet_npc"):
+            print("You encounter a friendly NPC who offers you advice.")
+            action = input("Do you (1) follow their advice or (2) ignore them? ")
+            if action == "2":
+                print("You ignore the NPC and venture forth alone.")
+            else:
+                print("You heed the NPC's advice and feel prepared for the journey.")
+        else:
+            print("You are ambushed on your journey and barely escape! You continue onward.")
+        
+        # Decision 2: Fight Enemy
+        if self.sample_decision("fight_enemy"):
+            print("A wild enemy appears! You fight bravely and defeat it.")
+        else:
+            print("You try to avoid the enemy but are wounded in the process.")
+        
+        # Decision 3: Explore a Mysterious Cave
+        if self.sample_decision("explore_cave"):
+            print("You explore a mysterious cave and find rare artifacts!")
+        else:
+            print("You get lost in the cave and barely make it out alive.")
+        
+        # Decision 4: Help a Traveler in Need
+        if self.sample_decision("help_traveler"):
+            print("You help a traveler in need, who rewards you with valuable information.")
+        else:
+            print("You ignore the traveler and feel guilty as you move on.")
+        
+        # Decision 5: Cross River
+        if self.sample_decision("cross_river"):
+            print("You cross the dangerous river safely.")
+        else:
+            print("You are swept away by the current and lose supplies.")
+        
+        # Decision 6: Climb Mountain
+        if self.sample_decision("climb_mountain"):
+            print("You climb the steep mountain and gain a vantage point.")
+        else:
+            print("You slip and injure yourself.")
+        
+        # Decision 7: Encounter Magical Merchant
+        if self.sample_decision("magical_merchant"):
+            print("You meet a magical merchant who gives you a powerful item.")
+        else:
+            print("The merchant tricks you and takes your gold.")
+        
+        # Decision 8: Decipher Ancient Runes
+        if self.sample_decision("decipher_runes"):
+            print("You decipher the ancient runes and unlock a hidden passage!")
+        else:
+            print("You fail to decipher the runes.")
+        
+        # Decision 9: Rescue Captive
+        if self.sample_decision("rescue_captive"):
+            print("You rescue a captive who joins your quest.")
+        else:
+            print("You are caught trying to free the captive.")
+        
+        # Decision 10: Set Up Camp
+        if self.sample_decision("set_up_camp"):
+            print("You set up camp and rest peacefully for the night.")
+        else:
+            print("Your camp is raided by wild animals.")
+        
+        # Decision 11: Confront Rival
+        if self.sample_decision("confront_rival"):
+            print("You confront a rival adventurer and emerge victorious.")
+        else:
+            print("The rival outsmarts you and takes some of your loot.")
+        
+        # Final Decision: Find Treasure
+        if self.sample_decision("find_treasure"):
+            print("Congratulations! You've found the treasure and completed your adventure!")
+        else:
+            print("You search for the treasure but come up empty-handed. Better luck next time!")
+        
+        print("Game Over. Thanks for playing Adventure Quest!")
+
+# Start the game
+if __name__ == "__main__":
+    game = AdventureQuestGame()
+    game.play()
+
